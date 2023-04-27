@@ -1,0 +1,69 @@
+train:
+  seed: 42
+  train_samples: 1024
+  val_samples: 1024
+  max_predictor_iter: 5000
+  max_iter: 10000
+  batch_size: 128
+  log_freq: 10
+  val_freq: 100
+  save_freq: 1000
+  max_grad_norm: 100.
+  freeze_predictor: false
+  optimizer:
+    predictor:
+      type: adam
+      lr: 1.e-3
+      weight_decay: 0.
+      beta1: 0.9
+      beta2: 0.999
+    diffusion:
+      type: adam
+      lr: 3.e-4
+      weight_decay: 0.
+      beta1: 0.9
+      beta2: 0.999
+  scheduler:
+    predictor:
+      type: plateau
+      factor: 0.5
+      patience: 10
+      min_lr: 1.e-5
+    diffusion:
+      type: plateau
+      factor: 0.5
+      patience: 10
+      min_lr: 1.e-5
+
+test:
+  batch_size: 32
+  inf_samples: 4096
+  num_infer: null
+  num_vis: 2
+
+datasets:
+  type: density
+  root: ./data/
+  mol_name: benzene
+
+model:
+  type: gcn
+  n_atom_type: 3
+  n_gauss: 128
+  atom_embed_size: 256
+  radial_embed_size: 256
+  hidden_size: 1024
+  num_gcn_layer: 1
+  cutoff: 5.
+  diffusion:
+    beta_schedule:
+      type: linear
+      beta_step: 1000
+      beta_start: 1.e-5
+      beta_end: 2.e-2
+    time_embed_size: 256
+    sample_scheme: ddpm
+    clip_denoise: 10.
+  orbital:
+    gauss_start: 0.5
+    gauss_end: 5.
